@@ -63,8 +63,18 @@ public class Outtake : MonoBehaviour
                 objects[i].transform.position = teleportPoints[i].transform.position;
                 rigidBodies[i].useGravity = true;
                 rigidBodies[i].velocity = Vector3.zero;
-                objects[i].GetComponent<BoxCollider>().enabled = true;
-                //rigidBodies[i].freezeRotation = false;
+                if (objects[i].tag == "Pixel") 
+                { 
+                    for(int j = 0; j < objects[i].transform.childCount; j++)
+                    {
+                        objects[i].transform.GetChild(j).GetComponent<BoxCollider>().enabled = true;
+                    }
+                }
+                else
+                {
+                    objects[i].GetComponent<BoxCollider>().enabled = true;
+                }
+                if (objects[i].tag != "Scoring Element (F)") rigidBodies[i].freezeRotation = false;
 
             }
         }

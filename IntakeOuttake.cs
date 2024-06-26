@@ -59,10 +59,24 @@ public class IntakeOuttake : MonoBehaviour
         if (intakeTrigger.IsPressed()) { 
         Debug.Log("Collided with" +  other.ToString());
         if (other == null) return;
-            if (other.gameObject.tag == "Scoring Element")
+            if (other.gameObject.tag == "Scoring Element" || other.gameObject.tag == "Scoring Element (F)" || other.gameObject.tag == "Pixel sub")
             {
-                other.GetComponent<Rigidbody>().freezeRotation = true;
-                other.GetComponent<BoxCollider>().enabled = false;
+                if (other.gameObject.tag == "Pixel sub")
+                {
+                    other.GetComponentInParent<Rigidbody>().freezeRotation = true;
+                    GameObject parent = other.transform.parent.gameObject;
+                    for (int j = 0; j < parent.transform.childCount; j++)
+                    {
+                        parent.transform.GetChild(j).GetComponent<BoxCollider>().enabled = false;
+                    }
+                    other.GetComponentInParent<BoxCollider>().enabled = false;
+                }
+                else
+                {
+                    other.GetComponent<Rigidbody>().freezeRotation = true;
+                    other.GetComponent<BoxCollider>().enabled = false;
+                }
+                
                 constantMove = true;
                 Debug.Log("is found: " + isFound);
 
@@ -78,13 +92,23 @@ public class IntakeOuttake : MonoBehaviour
                     }
                     if (collisions[i] == null && !isFound)
                     {
-                        collisions[i] = other.gameObject;
-                        rigidBodies[i] = other.GetComponent<Rigidbody>();
+                        if (other.gameObject.tag == "Pixel sub")
+                        {
+                            collisions[i] = other.transform.root.gameObject;
+                            rigidBodies[i] = other.GetComponentInParent<Rigidbody>();
+                        }
+                        else
+                        {
+                            collisions[i] = other.gameObject;
+                            rigidBodies[i] = other.GetComponent<Rigidbody>();
+                        }
+                        
                         isFound = true;
                     }
                 }
                 isFound = false;
             }
+
         }
     }
 }
