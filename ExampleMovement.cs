@@ -8,13 +8,21 @@ using UnityEngine.InputSystem;
 
 public class ExampleMovement : MonoBehaviour
 {
-    public bool usingGamepad = true;
-    public InputAction forwardKey;
-    public InputAction rightKey;
-    public InputAction backKey;
-    public InputAction leftKey;
-    public InputAction leftRotate;
-    public InputAction rightRotate;
+    public PlayerInput playerInput;
+    [SerializeField]
+    private bool usingGamepad = true;
+    [SerializeField]
+    private InputAction forwardKey;
+    [SerializeField]
+    private InputAction rightKey;
+    [SerializeField]
+    private InputAction backKey;
+    [SerializeField]
+    private InputAction leftKey;
+    [SerializeField]
+    private InputAction leftRotate;
+    [SerializeField]
+    private InputAction rightRotate;
     private float forwardPressed = 0;
     private float rightPressed = 0;
     private float backPressed = 0;
@@ -22,18 +30,31 @@ public class ExampleMovement : MonoBehaviour
     private int lRotatePressed = 0;
     private int rRotatePressed = 0;
     private float speedMult = 0;
-
-    public float accelerationRate = 0.5f;
+    [SerializeField]
+    private float accelerationRate = 0.5f;
     public float forwardSpeedDifferenceOverStrafe = 1.2f;
-    public InputAction slowMode;
-    public InputAction leftJoystick;
-    public InputAction rightJoystick;
+    private InputAction slowMode;
+    private InputAction leftJoystick;
+    private InputAction rightJoystick;
     public Rigidbody rb;
     public float rotSpeed = 5f;
     public float maxSpeed = 50;
     private float[] acceleration = new float[4];
 
     public Boolean onFloor = true;
+
+    
+    private void Awake()
+    {
+        leftJoystick = playerInput.actions["LeftJoy"];
+        rightJoystick = playerInput.actions["RightJoy"];
+        slowMode = playerInput.actions["Slowmode"];
+        if (leftJoystick.IsUnityNull() || rightJoystick.IsUnityNull() || slowMode.IsUnityNull()) 
+        {
+            Debug.Log("LJ: " + !leftJoystick.IsUnityNull() + " RJ: " + !rightJoystick.IsUnityNull() + " SM: " + !slowMode.IsUnityNull());
+            Debug.Log("Map: " + !playerInput.IsUnityNull());
+        }
+    }
 
     void OnEnable()
     {

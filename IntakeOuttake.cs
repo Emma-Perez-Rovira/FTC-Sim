@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 public class IntakeOuttake : MonoBehaviour
 {
     [SerializeField]
+    private PlayerInput playerInput;
+    [SerializeField]
     private int maxCount = 1;
     [SerializeField]
     private GameObject[] points;
@@ -16,8 +18,11 @@ public class IntakeOuttake : MonoBehaviour
     public Boolean constantMove = true;
     private Boolean isFound = false;
 
-    [SerializeField]
     private InputAction intakeTrigger;
+    void Awake()
+    {
+        intakeTrigger = playerInput.actions["Intake"];
+    }
     private void OnEnable()
     {
         intakeTrigger.Enable();
