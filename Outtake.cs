@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,22 +6,25 @@ using UnityEngine.InputSystem;
 
 public class Outtake : MonoBehaviour
 {
+
+    private Boolean outtakeTrigger;
+
     public GameObject[] teleportPoints;
     public int maxNum = 3;
-    public InputAction outtakeTrigger;
     public bool outtakeTriggerIsAnalog = false;
     public GameObject intake;
     
     private GameObject[] objects;
     private Rigidbody[] rigidBodies;
-    
+
+    public void OnOuttake(InputAction.CallbackContext ctx) => outtakeTrigger = ctx.action.triggered;
     private void OnEnable()
     {
-        outtakeTrigger.Enable();
+        
     }
     private void OnDisable()
     {
-        outtakeTrigger.Disable();
+        
     }
 
     // Start is called before the first frame update
@@ -30,22 +34,15 @@ public class Outtake : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (outtakeTriggerIsAnalog)
+        
+        
+        if (outtakeTrigger)
         {
-            if (outtakeTrigger.ReadValue<float>() > 0.5f)
-            {
-                OnOuttakeTrigger();
-            }
+            OnOuttakeTrigger();
         }
-        else
-        {
-            if (outtakeTrigger.IsPressed())
-            {
-                OnOuttakeTrigger();
-            }
-        }
+        
     }
     private void OnOuttakeTrigger()
     {
@@ -63,7 +60,7 @@ public class Outtake : MonoBehaviour
                 objects[i].transform.position = teleportPoints[i].transform.position;
                 rigidBodies[i].useGravity = true;
                 rigidBodies[i].velocity = Vector3.zero;
-                if (objects[i].tag == "Pixel") 
+                if (objects[i].tag == "Pixel" || objects[i].tag.IndexOf("Nested Object Top") != -1) 
                 { 
                     for(int j = 0; j < objects[i].transform.childCount; j++)
                     {
@@ -74,7 +71,7 @@ public class Outtake : MonoBehaviour
                 {
                     objects[i].GetComponent<BoxCollider>().enabled = true;
                 }
-                if (objects[i].tag != "Scoring Element (F)") rigidBodies[i].freezeRotation = false;
+                if (objects[i].tag.IndexOf("(F)") == -1) rigidBodies[i].freezeRotation = false;
 
             }
         }

@@ -7,7 +7,8 @@ using UnityEngine.InputSystem;
 public class IntakeOuttake : MonoBehaviour
 {
     [SerializeField]
-    private PlayerInput playerInput;
+    private GameObject parent;
+    private Boolean playerInput;
     [SerializeField]
     private int maxCount = 1;
     [SerializeField]
@@ -18,18 +19,15 @@ public class IntakeOuttake : MonoBehaviour
     public Boolean constantMove = true;
     private Boolean isFound = false;
 
-    private InputAction intakeTrigger;
-    void Awake()
-    {
-        intakeTrigger = playerInput.actions["Intake"];
-    }
+
+    public void OnIntake(InputAction.CallbackContext ctx) => playerInput = ctx.action.triggered;
     private void OnEnable()
     {
-        intakeTrigger.Enable();
+
     }
     private void OnDisable()
     {
-        intakeTrigger.Disable();
+
     }
     // Start is called before the first frame update
     void Start()
@@ -61,7 +59,7 @@ public class IntakeOuttake : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (intakeTrigger.IsPressed()) { 
+        if (playerInput) { 
         Debug.Log("Collided with" +  other.ToString());
         if (other == null) return;
             if (other.gameObject.tag == "Scoring Element" || other.gameObject.tag == "Scoring Element (F)" || other.gameObject.tag == "Pixel sub")
