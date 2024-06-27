@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 
 public class ExampleMovement : MonoBehaviour
 {
@@ -34,8 +35,8 @@ public class ExampleMovement : MonoBehaviour
     private float accelerationRate = 0.5f;
     public float forwardSpeedDifferenceOverStrafe = 1.2f;
     private InputAction slowMode;
-    private InputAction leftJoystick;
-    private InputAction rightJoystick;
+    private Vector2 leftJoystick;
+    private Vector2 rightJoystick;
     public Rigidbody rb;
     public float rotSpeed = 5f;
     public float maxSpeed = 50;
@@ -46,8 +47,8 @@ public class ExampleMovement : MonoBehaviour
     
     private void Awake()
     {
-        leftJoystick = playerInput.actions["LeftJoy"];
-        rightJoystick = playerInput.actions["RightJoy"];
+        //leftJoystick = playerInput.actions["LeftJoy"];
+        //rightJoystick = playerInput.actions["RightJoy"];
         slowMode = playerInput.actions["Slowmode"];
         if (leftJoystick.IsUnityNull() || rightJoystick.IsUnityNull() || slowMode.IsUnityNull()) 
         {
@@ -55,7 +56,8 @@ public class ExampleMovement : MonoBehaviour
             Debug.Log("Map: " + !playerInput.IsUnityNull());
         }
     }
-
+    public void OnLeftJoy(InputAction.CallbackContext ctx) => leftJoystick = ctx.ReadValue<Vector2>();
+    public void OnRightJoy(InputAction.CallbackContext ctx) => rightJoystick = ctx.ReadValue<Vector2>();
     void OnEnable()
     {
         forwardKey.Enable();
@@ -65,8 +67,8 @@ public class ExampleMovement : MonoBehaviour
         leftRotate.Enable();
         rightRotate.Enable();
 
-        leftJoystick.Enable();
-        rightJoystick.Enable();
+        //leftJoystick.Enable();
+        //rightJoystick.Enable();
         slowMode.Enable();
     }
     void OnDisable()
@@ -78,8 +80,8 @@ public class ExampleMovement : MonoBehaviour
         leftRotate.Disable();
         rightRotate.Disable();
 
-        leftJoystick.Disable();
-        rightJoystick.Disable();
+        //leftJoystick.Disable();
+        //rightJoystick.Disable();
         slowMode.Disable();
     }
     // Start is called before the first frame update
@@ -88,12 +90,11 @@ public class ExampleMovement : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
 
-    }
+
+    
+        
+        // Update is called once per frame
 
     private void FixedUpdate()
     {
@@ -112,6 +113,7 @@ public class ExampleMovement : MonoBehaviour
     }
     private void doStuffGamepad()
     {
+
         if (slowMode.IsPressed())
         {
             speedMult = 0.5f;
@@ -120,8 +122,8 @@ public class ExampleMovement : MonoBehaviour
         { 
             speedMult = 1f;
         }
-        Vector2 leftJoy = leftJoystick.ReadValue<Vector2>();
-        Vector2 rightJoy = rightJoystick.ReadValue<Vector2>() * rotSpeed;
+        Vector2 leftJoy = leftJoystick;
+        Vector2 rightJoy = rightJoystick * rotSpeed;
 
         float speedDifX = maxSpeed - Math.Abs(rb.velocity.x);
         float speedDifZ = maxSpeed - Math.Abs(rb.velocity.z);
