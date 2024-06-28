@@ -6,10 +6,6 @@ using UnityEngine.Events;
 public class FieldToggles : MonoBehaviour
 {
     [SerializeField]
-    private GameObject fieldSwitcher;
-    [SerializeField]
-    private GameObject botSwitcher;
-    [SerializeField]
     private UnityEvent centerstageSwitch;
     [SerializeField]
     private UnityEvent centerstageBotsSwitch;
@@ -23,9 +19,10 @@ public class FieldToggles : MonoBehaviour
     private UnityEvent relicRecoveryBotsSwitch;
     private bool[] loadingFields;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         string storage = PlayerPrefs.GetString("Activated");
+        Debug.Log(storage);
         loadingFields = new bool[storage.Length];
         for(int i = 0; i < storage.Length; i++)
         {
@@ -36,7 +33,9 @@ public class FieldToggles : MonoBehaviour
             {
                 loadingFields[i] = false;
             }
+            Debug.Log(loadingFields[i]);
         }
+        
         if (loadingFields[0]) 
         {
             centerstageSwitch.Invoke();
@@ -61,6 +60,7 @@ public class FieldToggles : MonoBehaviour
         {
             relicRecoveryBotsSwitch.Invoke();
         }
+        Debug.Log("All called, " + centerstageSwitch.ToString());
     }
 
     // Update is called once per frame
