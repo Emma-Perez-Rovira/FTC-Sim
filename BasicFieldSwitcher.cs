@@ -12,13 +12,13 @@ public class BasicFieldSwitcher : MonoBehaviour
     [SerializeField]
     private GameObject[] NPCBots;
     [SerializeField]
-    private Boolean startEnabled;
-    private Boolean enabled;
+    private Boolean startEnabled = false;
+    private Boolean unHidden;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        enabled = startEnabled;
-        if (enabled)
+        unHidden = startEnabled;
+        if (unHidden)
         {
             for(int i = 0; i < FieldStuff.Length; i++)
             {
@@ -48,6 +48,7 @@ public class BasicFieldSwitcher : MonoBehaviour
                 paths[i].SetActive(false);
             }
         }
+        Debug.Log("AWAKE RAN");
     }
 
     // Update is called once per frame
@@ -57,8 +58,9 @@ public class BasicFieldSwitcher : MonoBehaviour
     }
     public void switcher()
     {
-        enabled = !enabled;
-        if (enabled)
+        Debug.Log("RAN");
+        unHidden = !unHidden;
+        if (unHidden)
         {
             for (int i = 0; i < FieldStuff.Length; i++)
             {
