@@ -34,7 +34,10 @@ public class ExampleMovement : MonoBehaviour
     [SerializeField]
     private float accelerationRate = 0.5f;
     public float forwardSpeedDifferenceOverStrafe = 1.2f;
-    private InputAction slowMode;
+    private Boolean slowMode;
+    private Boolean teamSwitch;
+    private Boolean teamComboPressed;
+    private int team = 1;
     private Vector2 leftJoystick;
     private Vector2 rightJoystick;
     public Rigidbody rb;
@@ -42,22 +45,26 @@ public class ExampleMovement : MonoBehaviour
     public float maxSpeed = 50;
     private float[] acceleration = new float[4];
 
-    public Boolean onFloor = true;
+    private Camera playerCam;
 
     
     private void Awake()
     {
         //leftJoystick = playerInput.actions["LeftJoy"];
         //rightJoystick = playerInput.actions["RightJoy"];
-        slowMode = playerInput.actions["Slowmode"];
+        
         if (leftJoystick.IsUnityNull() || rightJoystick.IsUnityNull() || slowMode.IsUnityNull()) 
         {
             Debug.Log("LJ: " + !leftJoystick.IsUnityNull() + " RJ: " + !rightJoystick.IsUnityNull() + " SM: " + !slowMode.IsUnityNull());
             Debug.Log("Map: " + !playerInput.IsUnityNull());
         }
     }
+
     public void OnLeftJoy(InputAction.CallbackContext ctx) => leftJoystick = ctx.ReadValue<Vector2>();
     public void OnRightJoy(InputAction.CallbackContext ctx) => rightJoystick = ctx.ReadValue<Vector2>();
+    public void OnSlomode(InputAction.CallbackContext ctx) => slowMode = ctx.action.IsPressed();
+    public void OnTeamSwitch(InputAction.CallbackContext ctx) => teamSwitch = ctx.action.IsPressed();
+
     void OnEnable()
     {
         forwardKey.Enable();
@@ -69,10 +76,10 @@ public class ExampleMovement : MonoBehaviour
 
         //leftJoystick.Enable();
         //rightJoystick.Enable();
-        slowMode.Enable();
     }
     void OnDisable()
     {
+        Debug.Log("Disabled");  
         forwardKey.Disable();
         rightKey.Disable();
         leftKey.Disable();
@@ -82,7 +89,6 @@ public class ExampleMovement : MonoBehaviour
 
         //leftJoystick.Disable();
         //rightJoystick.Disable();
-        slowMode.Disable();
     }
     // Start is called before the first frame update
     void Start()
@@ -113,17 +119,35 @@ public class ExampleMovement : MonoBehaviour
     }
     private void doStuffGamepad()
     {
-
-        if (slowMode.IsPressed())
+        Debug.Log("Slow: " + slowMode + ", switch: " + teamSwitch);
+        if (slowMode)
         {
             speedMult = 0.5f;
+            if (teamSwitch && !teamComboPressed)
+            {
+                team = team * -1;
+                teamComboPressed = true;
+                Debug.Log("PRESSED!");
+            }
+            else if (teamComboPressed && !teamSwitch)
+            {
+                teamComboPressed = false;
+            }
         }
-        else 
-        { 
+        else if (teamComboPressed)
+        {
+
+
+            teamComboPressed = false;
+
+
+        }
+        else
+        {
             speedMult = 1f;
         }
-        Vector2 leftJoy = leftJoystick;
-        Vector2 rightJoy = rightJoystick * rotSpeed;
+        Vector2 leftJoy = leftJoystick * team;
+        Vector2 rightJoy = rightJoystick * rotSpeed * team;
 
         float speedDifX = maxSpeed - Math.Abs(rb.velocity.x);
         float speedDifZ = maxSpeed - Math.Abs(rb.velocity.z);
