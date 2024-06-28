@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,14 @@ public class BasicFieldSwitcher : MonoBehaviour
     private GameObject[] paths;
     [SerializeField]
     private GameObject[] NPCBots;
-    private int switcher = 1;
+    [SerializeField]
+    private Boolean startEnabled;
+    private Boolean enabled;
     // Start is called before the first frame update
     void Start()
     {
-        if (switcher == 1)
+        enabled = startEnabled;
+        if (enabled)
         {
             for(int i = 0; i < FieldStuff.Length; i++)
             {
@@ -51,40 +55,37 @@ public class BasicFieldSwitcher : MonoBehaviour
     {
         
     }
-    private void OnTriggerEnter(Collider other)
+    public void switcher()
     {
-        if(other.gameObject.tag == "Bot")
+        enabled = !enabled;
+        if (enabled)
         {
-            switcher *= -1;
-            if (switcher == 1)
+            for (int i = 0; i < FieldStuff.Length; i++)
             {
-                for (int i = 0; i < FieldStuff.Length; i++)
-                {
-                    FieldStuff[i].SetActive(true);
-                }
-                for (int i = 0; i < NPCBots.Length; i++)
-                {
-                    NPCBots[i].SetActive(true);
-                }
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    paths[i].SetActive(true);
-                }
+                FieldStuff[i].SetActive(true);
             }
-            else
+            for (int i = 0; i < NPCBots.Length; i++)
             {
-                for (int i = 0; i < FieldStuff.Length; i++)
-                {
-                    FieldStuff[i].SetActive(false);
-                }
-                for (int i = 0; i < NPCBots.Length; i++)
-                {
-                    NPCBots[i].SetActive(false);
-                }
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    paths[i].SetActive(false);
-                }
+                NPCBots[i].SetActive(true);
+            }
+            for (int i = 0; i < paths.Length; i++)
+            {
+                paths[i].SetActive(true);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < FieldStuff.Length; i++)
+            {
+                FieldStuff[i].SetActive(false);
+            }
+            for (int i = 0; i < NPCBots.Length; i++)
+            {
+                NPCBots[i].SetActive(false);
+            }
+            for (int i = 0; i < paths.Length; i++)
+            {
+                paths[i].SetActive(false);
             }
         }
     }
