@@ -12,7 +12,7 @@ public class Field3Switcher : MonoBehaviour
     private Boolean enabled;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         enabled = startEnabled;
         if (enabled)

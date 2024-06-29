@@ -11,6 +11,15 @@ public class ScenePassVariables: MonoBehaviour
     public static bool RelicrecoveryField;
     public static bool RelicrecoveryBots;
 
+    public void OnEnable()
+    {
+        FalseCenterstageField();
+        FalseCenterstageBots();
+        FalsePowerplayField();
+        FalsePowerplayBots();
+        FalseRelicrecoveryField();
+        FalseRelicrecoveryBots();
+    }
     public static void ToggleCenterstageField()
     {
         CenterstageField = !CenterstageField;
@@ -35,6 +44,33 @@ public class ScenePassVariables: MonoBehaviour
     {
         RelicrecoveryBots = !RelicrecoveryBots;
     }
+
+
+    public static void FalseCenterstageField()
+    {
+        CenterstageField = false;
+    }
+    public static void FalseCenterstageBots()
+    {
+        CenterstageBots = false;
+    }
+    public static void FalsePowerplayField()
+    {
+        PowerplayField = false;
+    }
+    public static void FalsePowerplayBots()
+    {
+        PowerplayBots = false;
+    }
+    public static void FalseRelicrecoveryField()
+    {
+        RelicrecoveryField = false;
+    }
+    public static void FalseRelicrecoveryBots()
+    {
+        RelicrecoveryBots = false;
+    }
+
     public void OnDestroy()
     {
         string toStore = "";
