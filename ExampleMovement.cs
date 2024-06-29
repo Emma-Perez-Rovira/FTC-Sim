@@ -37,6 +37,7 @@ public class ExampleMovement : MonoBehaviour
     private Boolean slowMode;
     private Boolean teamSwitch;
     private Boolean teamComboPressed;
+    private Boolean teamSwitch2;
     private int team = 1;
     private Vector2 leftJoystick;
     private Vector2 rightJoystick;
@@ -64,6 +65,7 @@ public class ExampleMovement : MonoBehaviour
     public void OnRightJoy(InputAction.CallbackContext ctx) => rightJoystick = ctx.ReadValue<Vector2>();
     public void OnSlomode(InputAction.CallbackContext ctx) => slowMode = ctx.action.IsPressed();
     public void OnTeamSwitch(InputAction.CallbackContext ctx) => teamSwitch = ctx.action.IsPressed();
+    public void OnTeamSwitch2(InputAction.CallbackContext ctx) => teamSwitch2 = ctx.action.IsPressed();
 
     void OnEnable()
     {
@@ -123,13 +125,13 @@ public class ExampleMovement : MonoBehaviour
         if (slowMode)
         {
             speedMult = 0.5f;
-            if (teamSwitch && !teamComboPressed)
+            if (teamSwitch && !teamComboPressed && teamSwitch2)
             {
                 team = team * -1;
                 teamComboPressed = true;
                 Debug.Log("PRESSED!");
             }
-            else if (teamComboPressed && !teamSwitch)
+            else if (teamComboPressed && (!teamSwitch || !teamSwitch2))
             {
                 teamComboPressed = false;
             }
@@ -147,7 +149,7 @@ public class ExampleMovement : MonoBehaviour
             speedMult = 1f;
         }
         Vector2 leftJoy = leftJoystick * team;
-        Vector2 rightJoy = rightJoystick * rotSpeed * team;
+        Vector2 rightJoy = rightJoystick * rotSpeed;
 
         float speedDifX = maxSpeed - Math.Abs(rb.velocity.x);
         float speedDifZ = maxSpeed - Math.Abs(rb.velocity.z);
